@@ -1,5 +1,4 @@
 // Copyright 2020 ivan <ikhonyak@gmail.com>
-
 #include <vector>
 #include <atomic>
 #include <boost/log/core.hpp>
