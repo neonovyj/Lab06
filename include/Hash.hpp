@@ -25,8 +25,8 @@
 
 #include "../third-party/PicoSHA2/picosha2.h"
 
-#ifndef INCLUDE_HASHCALC_HPP_
-#define INCLUDE_HASHCALC_HPP_
+#ifndef INCLUDE_HASH_HPP_
+#define INCLUDE_HASH_HPP_
 
 using nlohmann::json;
 
@@ -50,4 +50,4 @@ class Hash {
   json j;
 };
 
-#endif  // INCLUDE_HASHCALC_HPP_
+#endif  // INCLUDE_HASH_HPP_"
