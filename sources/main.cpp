@@ -1,8 +1,8 @@
 // Copyright 2020 ivan <ikhonyak@gmail.com>
-#include "hashCalc.hpp"
+#include "Hash.hpp"
 
 int main(int, char*[]) {
-  hashCalc A("/home/ivan/lab-06-multithreads/map.json");
+  Hash A("/home/ivan/lab-06-multithreads/map.json");
   A.initLogs();
   A.initThreads();
   return 0;

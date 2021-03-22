@@ -1,5 +1,4 @@
 // Copyright 2020 ivan <ikhonyak@gmail.com>
-#include <vector>
 #include <atomic>
 #include <boost/log/core.hpp>
 #include <boost/log/expressions.hpp>
@@ -22,6 +21,7 @@
 #include <string>
 #include <thread>
 #include <utility>
+#include <vector>
 
 #include "../third-party/PicoSHA2/picosha2.h"
 
@@ -30,13 +30,11 @@
 
 using nlohmann::json;
 
-class hashCalc {
+class Hash {
  public:
-  // hashCalc();
-  hashCalc(const size_t& M,
-           const std::string& str = "");
-  explicit hashCalc(const std::string& str);
-  ~hashCalc();
+  Hash(const size_t& M, const std::string& str = "");
+  explicit Hash(const std::string& str);
+  ~Hash();
   void countHash();
   void openFilePath();
   void initThreads();

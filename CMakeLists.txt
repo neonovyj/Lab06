@@ -41,20 +41,20 @@ find_package(Boost CONFIG REQUIRED filesystem log log_setup system thread)
 include_directories(${Boost_INCLUDE_DIRS})
 add_library(template STATIC
         # enum your files and delete this comment
-        ${CMAKE_CURRENT_SOURCE_DIR}/sources/hashCalc.cpp
-        include/hashCalc.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/sources/Hash.cpp
+        include/Hash.hpp
         sources/main.cpp)
 add_executable(tests
         # TODO: enum your files and delete this comment
         ${CMAKE_CURRENT_SOURCE_DIR}/tests/test.cpp
-        include/hashCalc.hpp
-        sources/hashCalc.cpp
+        include/Hash.hpp
+        sources/Hash.cpp
         )
 
 add_executable(main
         ${CMAKE_CURRENT_SOURCE_DIR}/sources/main.cpp
-        include/hashCalc.hpp
-        sources/hashCalc.cpp)
+        include/Hash.hpp
+        sources/Hash.cpp)
 
 # TODO: change template word to project name and delete this comment
 target_include_directories(template
