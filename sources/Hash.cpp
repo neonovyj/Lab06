@@ -1,50 +1,44 @@
 // Copyright 2020 ivan <ikhonyak@gmail.com>
-#include "hashCalc.hpp"
+#include "Hash.hpp"
 
 namespace keywords = boost::log::keywords;
 namespace sinks = boost::log::sinks;
 boost::mutex mutex;
 
-hashCalc::hashCalc(const size_t& M, const std::string& str) {
+Hash::Hash(const size_t& M, const std::string& str) {
   nameOfReport = str;
-  if (M < boost::thread::hardware_concurrency()) {  //попробовать заменить
+  if (M < boost::thread::hardware_concurrency()) {
     sizeOfThread = M;
   }
   openFilePath();
 }
 
-hashCalc::hashCalc(const std::string& str) : nameOfReport(str) {
-  openFilePath();
-}
+Hash::Hash(const std::string& str) : nameOfReport(str) { openFilePath(); }
 
-hashCalc::~hashCalc() {
+Hash::~Hash() {
   if (directionIsOpen()) {
-    file_log << j.dump(1, '\t') << "\n";  // dump
+    file_log << j.dump(1, '\t') << "\n";
     file_log.close();
   }
 }
 
-void hashCalc::openFilePath() {
+void Hash::openFilePath() {
   if (!nameOfReport.empty()) {
     file_log.open(nameOfReport);
   }
 }
 
 std::atomic<bool> stopFlag = true;
-// bool volatile stopFlag = true;
 
-void intHandler([[maybe_unused]] int dummy) { stopFlag = false; }
+void stop_signal([[maybe_unused]] int dummy) { stopFlag = false; }
 
-void hashCalc::countHash() {
-  // auto id = boost::this_thread::get_id();
-  // boost::unique_lock<boost::mutex> lock(mutex);
+void Hash::countHash() {
   std::srand(time(nullptr));
-  for (;;) {  //!
-    std::signal(SIGINT, intHandler);
+  for (;;) {
+    std::signal(SIGINT, stop_signal);
     unsigned int randNum = std::rand();
     time_t timestamp(time(nullptr));
-    std::string data =
-        picosha2::hash256_hex_string(std::to_string(randNum));  // picosha2
+    std::string data = picosha2::hash256_hex_string(std::to_string(randNum));
     if (std::regex_match(data, std::regex("(\\w{60}0{4})"))) {
       BOOST_LOG_TRIVIAL(info)
           << "Input data: " << std::left << std::setw(15) << std::hex << randNum
@@ -61,9 +55,9 @@ void hashCalc::countHash() {
   }
 }
 
-void hashCalc::initThreads() {
+void Hash::initThreads() {
   for (size_t i = 0; i < sizeOfThread; ++i) {
-    listOfthread.push_back(boost::thread(&hashCalc::countHash, this));
+    listOfthread.push_back(boost::thread(&Hash::countHash, this));
   }
   for (auto& i : listOfthread) {
     i.join();
@@ -71,7 +65,7 @@ void hashCalc::initThreads() {
   listOfthread.clear();
 }
 
-void hashCalc::initLogs() {  //
+void Hash::initLogs() {  //
   boost::log::add_common_attributes();
   boost::log::add_console_log(
       std::cout, keywords::format = "[%TimeStamp%][%Severity%]: %Message%",
@@ -86,8 +80,8 @@ void hashCalc::initLogs() {  //
       keywords::format = "[%TimeStamp%][%Severity%]: %Message%");
 }
 
-void hashCalc::jsonOut(const int& data, const std::string& hash,
-                       const time_t& time) {
+void Hash::jsonOut(const int& data, const std::string& hash,
+                   const time_t& time) {
   mutex.lock();
   json obj =
       json::parse("{\n\t\"data\": " + std::to_string(data) + "," +
@@ -96,4 +90,4 @@ void hashCalc::jsonOut(const int& data, const std::string& hash,
   j.push_back(obj);
   mutex.unlock();
 }
-bool hashCalc::directionIsOpen() { return file_log.is_open(); }
+bool Hash::directionIsOpen() { return file_log.is_open(); }
