@@ -30,12 +30,12 @@ void Hash::openFilePath() {
 
 std::atomic<bool> stopFlag = true;
 
-void intHandler([[maybe_unused]] int dummy) { stopFlag = false; }
+void stop_signal([[maybe_unused]] int dummy) { stopFlag = false; }
 
 void Hash::countHash() {
   std::srand(time(nullptr));
   for (;;) {
-    std::signal(SIGINT, intHandler);
+    std::signal(SIGINT, stop_signal);
     unsigned int randNum = std::rand();
     time_t timestamp(time(nullptr));
     std::string data = picosha2::hash256_hex_string(std::to_string(randNum));

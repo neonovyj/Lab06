@@ -32,7 +32,8 @@ using nlohmann::json;
 
 class Hash {
  public:
-  Hash(const size_t& M, const std::string& str = "");
+  Hash(const size_t& M,
+           const std::string& str = "");
   explicit Hash(const std::string& str);
   ~Hash();
   void countHash();
